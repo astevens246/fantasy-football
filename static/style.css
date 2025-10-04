@@ -1,0 +1,42 @@
+/* Very basic styling - just layout, no fancy colors yet */
+.draft-board {
+    display: flex;
+    gap: 20px;
+}
+
+.available-players {
+    flex: 1;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.team-rosters {
+    flex: 1;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.teams-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.team {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.player-card {
+    border: 1px solid #ddd;
+    padding: 8px;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+.roster-slot {
+    border: 1px dashed #ccc;
+    padding: 8px;
+    margin: 3px 0;
+    text-align: center;
+}
