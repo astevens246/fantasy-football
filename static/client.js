@@ -29,12 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const playerName = card.querySelector('.player-name').textContent;
       const playerDetails = card.querySelector('.player-details').textContent;
       
-      // For now, just log the click - we'll add server communication next
-      console.log(`🏈 Player clicked:`, {
-        id: playerId,
-        name: playerName,
-        details: playerDetails
+      // Log the click for debugging
+      console.log(`🏈 Player clicked:`, playerName);
+      
+      // Send draft pick to server via Socket.IO
+      socket.emit('draft_player', {
+        playerId: playerId,
+        playerName: playerName,
+        playerDetails: playerDetails
       });
+      
+      console.log(`Sent draft pick to server: ${playerName}`);
     });
   });
   
