@@ -6,23 +6,37 @@ const server = require('http').Server(app);
 
 // Socket.io setup
 const io = require('socket.io')(server);
+
+// Draft state management
+let currentTurn = 1; // Which team's turn it is (1, 2, 3, 4)
+const totalTeams = 4; // Number of teams in the draft
+
 io.on("connection", (socket) => {
   console.log("🏈 New user connected to the draft! 🏈");
   
+  // Send current turn to new users
+  socket.emit('turn_updated', currentTurn);
+  
   // Listen for draft pick attempts
   socket.on('draft_player', (draftData) => {
-    console.log(`Draft pick received:`, draftData.playerName);
+    const draftingTeam = `Team ${currentTurn}`;
+    console.log(`📥 Draft pick received: ${draftData.playerName} by ${draftingTeam}`);
     
-    // For now, just echo the pick back to all clients
-    // (Later we'll add turn validation and roster management)
+    // Broadcast the pick to all clients with the correct team
     io.emit('player_drafted', {
       playerId: draftData.playerId,
       playerName: draftData.playerName,
       playerDetails: draftData.playerDetails,
-      draftedBy: 'Team 1' // Hardcoded for now
+      draftedBy: draftingTeam
     });
     
-    console.log(`Broadcasted draft pick to all clients: ${draftData.playerName}`);
+    // Advance to next team's turn
+    currentTurn = currentTurn === totalTeams ? 1 : currentTurn + 1;
+    
+    // Notify all clients of the turn change
+    io.emit('turn_updated', currentTurn);
+    
+    console.log(`📤 Broadcasted draft pick. Next turn: Team ${currentTurn}`);
   });
 });
 

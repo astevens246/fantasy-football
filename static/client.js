@@ -29,6 +29,17 @@ socket.on('player_drafted', (draftData) => {
   addPlayerToTeamRoster(draftData.playerName, draftData.draftedBy);
 });
 
+// Listen for turn updates from the server
+socket.on('turn_updated', (newTurn) => {
+  console.log(`🔄 Turn updated: Now Team ${newTurn}'s turn`);
+  
+  // Update the current turn display
+  const turnDisplay = document.getElementById('current-turn');
+  if (turnDisplay) {
+    turnDisplay.textContent = `Team ${newTurn}`;
+  }
+});
+
 // Function to add a player to a team's roster visually
 function addPlayerToTeamRoster(playerName, teamName) {
   // Convert "Team 1" to "team-1-roster" 
