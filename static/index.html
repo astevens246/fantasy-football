@@ -11,7 +11,17 @@
     <script src="client.js"></script>
 </head>
 <body>
-    <div class="container">
+    <!-- Team Selection Form (similar to Make Chat username form) -->
+    <form class="team-selection-form">
+        <h2>🏈 Join the Fantasy Draft 🏈</h2>
+        <p>Enter your team name and you'll be assigned a random draft position:</p>
+        
+        <input type="text" id="team-name-input" placeholder="Enter your team name (e.g., Allen's All-Stars)" maxlength="30" required>
+        
+        <button type="submit" id="join-team-btn">Join Draft</button>
+    </form>
+
+    <div class="container" style="display: none;">
         <header>
             <h1>🏈 Fantasy Football Draft Board 🏈</h1>
             <div class="turn-indicator">
@@ -53,7 +63,7 @@
                 <h2>Draft Results</h2>
                 <div class="teams-container">
                     <div class="team">
-                        <h3>Team 1</h3>
+                        <h3 id="team-1-name">Draft Position 1</h3>
                         <div class="roster" id="team-1-roster">
                             <div class="roster-slot empty">Pick 1</div>
                             <div class="roster-slot empty">Pick 2</div>
@@ -62,7 +72,7 @@
                     </div>
                     
                     <div class="team">
-                        <h3>Team 2</h3>
+                        <h3 id="team-2-name">Draft Position 2</h3>
                         <div class="roster" id="team-2-roster">
                             <div class="roster-slot empty">Pick 1</div>
                             <div class="roster-slot empty">Pick 2</div>
@@ -71,7 +81,7 @@
                     </div>
                     
                     <div class="team">
-                        <h3>Team 3</h3>
+                        <h3 id="team-3-name">Draft Position 3</h3>
                         <div class="roster" id="team-3-roster">
                             <div class="roster-slot empty">Pick 1</div>
                             <div class="roster-slot empty">Pick 2</div>
@@ -80,7 +90,7 @@
                     </div>
                     
                     <div class="team">
-                        <h3>Team 4</h3>
+                        <h3 id="team-4-name">Draft Position 4</h3>
                         <div class="roster" id="team-4-roster">
                             <div class="roster-slot empty">Pick 1</div>
                             <div class="roster-slot empty">Pick 2</div>
