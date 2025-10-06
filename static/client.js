@@ -14,6 +14,12 @@ socket.on('connect_error', (error) => {
   console.error('❌ Connection failed:', error);
 });
 
+// Listen for draft picks from the server
+socket.on('player_drafted', (draftData) => {
+  console.log(`DRAFT PICK: ${draftData.playerName} drafted by ${draftData.draftedBy}!`);
+  console.log('Full draft data:', draftData);
+});
+
 // Add click handlers to player cards when page loads
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Setting up player click handlers...');
