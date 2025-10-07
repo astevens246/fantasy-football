@@ -64,12 +64,33 @@ io.on("connection", (socket) => {
   
   // Handle team selection (like Make Chat's "new user")
   socket.on('join_team', (data) => {
-    const teamName = data.teamName;
+    // Validate input data
+    if (!data || typeof data.teamName !== 'string') {
+      socket.emit('draft_error', { message: 'Invalid team name provided.' });
+      console.log(`❌ ${socket.id} sent invalid team data:`, data);
+      return;
+    }
+    
+    const teamName = data.teamName.trim();
+    
+    // Validate team name length and content
+    if (teamName.length === 0 || teamName.length > 30) {
+      socket.emit('draft_error', { message: 'Team name must be 1-30 characters.' });
+      console.log(`❌ ${socket.id} sent invalid team name length: "${teamName}"`);
+      return;
+    }
     
     // Check if draft is full
     if (availablePositions.length === 0) {
       socket.emit('draft_full', { message: 'Draft is full! All 4 positions are taken.' });
       console.log(`❌ ${socket.id} tried to join "${teamName}" but draft is full`);
+      return;
+    }
+    
+    // Check if user is already assigned to a team
+    if (teamAssignments[socket.id]) {
+      socket.emit('draft_error', { message: 'You are already in the draft.' });
+      console.log(`❌ ${socket.id} tried to join again as "${teamName}"`);
       return;
     }
     
@@ -143,6 +164,32 @@ io.on("connection", (socket) => {
     });
     
     console.log(`📤 Broadcasted draft pick. Next turn: ${teamNames[currentTurn] || 'Team ' + currentTurn}`);
+  });
+  
+  // Handle user disconnection - clean up their team assignment
+  socket.on('disconnect', () => {
+    const userTeam = teamAssignments[socket.id];
+    if (userTeam) {
+      console.log(`🚪 User ${socket.id} (${teamNames[userTeam]}) disconnected`);
+      
+      // Add their position back to available positions
+      availablePositions.push(userTeam);
+      availablePositions.sort((a, b) => a - b); // Keep positions sorted
+      
+      // Remove team assignment and name
+      delete teamAssignments[socket.id];
+      delete teamNames[userTeam];
+      
+      // Notify remaining clients of the change
+      io.emit('team_disconnected', {
+        teamNumber: userTeam,
+        availablePositions: availablePositions
+      });
+      
+      console.log(`🔄 Position ${userTeam} is now available again. Available positions: [${availablePositions.join(', ')}]`);
+    } else {
+      console.log(`🚪 User ${socket.id} disconnected (was not in draft)`);
+    }
   });
 });
 
