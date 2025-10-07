@@ -68,6 +68,23 @@ socket.on('draft_full', (error) => {
   alert(`Draft Full: ${error.message}`);
 });
 
+// Listen for draft completion notification
+socket.on('draft_complete', (data) => {
+  console.log(`🎉 ${data.message}`);
+  
+  // Update turn display to show draft is complete
+  const turnDisplay = document.getElementById('current-turn');
+  if (turnDisplay) {
+    turnDisplay.textContent = 'DRAFT COMPLETE! 🎉';
+    turnDisplay.style.color = '#ff6b35'; // Orange celebration color
+    turnDisplay.style.fontWeight = 'bold';
+    turnDisplay.style.fontSize = '18px';
+  }
+  
+  // Show celebration alert
+  alert(`🎉 ${data.message}\n\nTotal picks made: ${data.totalPicks}/${data.maxPicks}`);
+});
+
 // Listen for player data from server
 socket.on('players_loaded', (players) => {
   console.log(`📋 Received ${players.length} players from server`);
