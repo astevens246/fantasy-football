@@ -92,7 +92,8 @@ io.on("connection", (socket) => {
       playerId: draftData.playerId,
       playerName: draftData.playerName,
       playerDetails: draftData.playerDetails,
-      draftedBy: draftingTeamName
+      draftedBy: draftingTeamName,
+      draftedByTeamNumber: currentTurn  // Add team number for roster placement
     });
     
     // Advance to next team's turn

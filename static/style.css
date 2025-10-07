@@ -1,3 +1,62 @@
+/* Team Selection Form Styling */
+.team-selection-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.team-selection-form h2 {
+    margin-bottom: 10px;
+    color: #2c5530;
+}
+
+.team-selection-form p {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+#team-name-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    background: white;
+}
+
+#team-select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    background: white;
+}
+
+#join-team-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#join-team-btn:hover {
+    background: #45a049;
+}
+
 /* Very basic styling - just layout, no fancy colors yet */
 .draft-board {
     display: flex;

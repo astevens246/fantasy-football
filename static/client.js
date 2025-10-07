@@ -29,8 +29,8 @@ socket.on('player_drafted', (draftData) => {
     console.log(`✅ Removed ${draftData.playerName} from available players`);
   }
   
-  // Add the player to the team roster
-  addPlayerToTeamRoster(draftData.playerName, draftData.draftedBy);
+  // Add the player to the team roster (use team number for placement)
+  addPlayerToTeamRoster(draftData.playerName, draftData.draftedByTeamNumber);
 });
 
 // Listen for turn updates from the server
@@ -69,9 +69,7 @@ socket.on('draft_full', (error) => {
 });
 
 // Function to add a player to a team's roster visually
-function addPlayerToTeamRoster(playerName, teamName) {
-  // Convert "Team 1" to "team-1-roster" 
-  const teamNumber = teamName.split(' ')[1]; // Gets "1" from "Team 1"
+function addPlayerToTeamRoster(playerName, teamNumber) {
   const rosterElement = document.getElementById(`team-${teamNumber}-roster`);
   
   if (rosterElement) {
@@ -82,12 +80,12 @@ function addPlayerToTeamRoster(playerName, teamName) {
       emptySlot.textContent = playerName;
       emptySlot.classList.remove('empty');
       emptySlot.classList.add('filled');
-      console.log(`✅ Added ${playerName} to ${teamName} roster`);
+      console.log(`✅ Added ${playerName} to Team ${teamNumber} roster`);
     } else {
-      console.log(`⚠️  No empty slots available for ${teamName}`);
+      console.log(`⚠️  No empty slots available for Team ${teamNumber}`);
     }
   } else {
-    console.log(`❌ Could not find roster for ${teamName}`);
+    console.log(`❌ Could not find roster for Team ${teamNumber}`);
   }
 }
 
