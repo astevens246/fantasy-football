@@ -29,8 +29,8 @@ socket.on('player_drafted', (draftData) => {
     console.log(`✅ Removed ${draftData.playerName} from available players`);
   }
   
-  // Add the player to the team roster (use team number for placement)
-  addPlayerToTeamRoster(draftData.playerName, draftData.draftedByTeamNumber);
+  // Add the player to the team roster (use team number and position for placement)
+  addPlayerToTeamRoster(draftData.playerName, draftData.draftedByTeamNumber, draftData.playerPosition);
 });
 
 // Listen for turn updates from the server
@@ -113,23 +113,44 @@ function displayPlayers(players) {
 }
 
 // Function to add a player to a team's roster visually
-function addPlayerToTeamRoster(playerName, teamNumber) {
+function addPlayerToTeamRoster(playerName, teamNumber, playerPosition) {
   const rosterElement = document.getElementById(`team-${teamNumber}-roster`);
   
-  if (rosterElement) {
-    // Find the first empty roster slot
-    const emptySlot = rosterElement.querySelector('.roster-slot.empty');
-    if (emptySlot) {
-      // Replace the empty slot with the player name
-      emptySlot.textContent = playerName;
-      emptySlot.classList.remove('empty');
-      emptySlot.classList.add('filled');
-      console.log(`✅ Added ${playerName} to Team ${teamNumber} roster`);
-    } else {
-      console.log(`⚠️  No empty slots available for Team ${teamNumber}`);
-    }
-  } else {
+  if (!rosterElement) {
     console.log(`❌ Could not find roster for Team ${teamNumber}`);
+    return;
+  }
+
+  // Find the best slot for this player based on their position
+  let targetSlot = null;
+  
+  if (playerPosition === 'QB') {
+    targetSlot = rosterElement.querySelector('.roster-slot.empty[data-position="QB"]');
+  } else if (playerPosition === 'RB') {
+    // Try RB1 first, then RB2
+    targetSlot = rosterElement.querySelector('.roster-slot.empty[data-position="RB1"]') ||
+                 rosterElement.querySelector('.roster-slot.empty[data-position="RB2"]');
+  } else if (playerPosition === 'WR') {
+    // Try WR1 first, then WR2
+    targetSlot = rosterElement.querySelector('.roster-slot.empty[data-position="WR1"]') ||
+                 rosterElement.querySelector('.roster-slot.empty[data-position="WR2"]');
+  } else if (playerPosition === 'TE') {
+    // TE position only
+    targetSlot = rosterElement.querySelector('.roster-slot.empty[data-position="TE"]');
+  } else {
+    // Fallback for any other positions - try any empty slot
+    targetSlot = rosterElement.querySelector('.roster-slot.empty');
+  }
+
+  if (targetSlot) {
+    // Show player name but keep position info
+    const slotPosition = targetSlot.getAttribute('data-position');
+    targetSlot.innerHTML = `<strong>${slotPosition}:</strong><br>${playerName}`;
+    targetSlot.classList.remove('empty');
+    targetSlot.classList.add('filled');
+    console.log(`✅ Added ${playerName} (${playerPosition}) to Team ${teamNumber} ${slotPosition} slot`);
+  } else {
+    console.log(`⚠️  No suitable slots available for ${playerName} (${playerPosition}) on Team ${teamNumber}`);
   }
 }
 
