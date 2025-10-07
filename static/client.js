@@ -77,36 +77,20 @@ socket.on('players_loaded', (players) => {
 // Function to display players in the HTML
 function displayPlayers(players) {
   const playersListElement = document.getElementById('players-list');
-  if (!playersListElement) {
-    console.error('❌ Players list element not found');
-    return;
-  }
+  if (!playersListElement) return;
   
   // Clear existing hardcoded players
   playersListElement.innerHTML = '';
   
-  // Validate players array
-  if (!Array.isArray(players) || players.length === 0) {
-    console.warn('⚠️ No players received from server');
-    playersListElement.innerHTML = '<div class="no-players">No players available</div>';
-    return;
-  }
-  
   // Add real players from server
   players.forEach(player => {
-    // Validate player object
-    if (!player || !player.id || !player.name) {
-      console.warn('⚠️ Invalid player data:', player);
-      return;
-    }
-    
     const playerCard = document.createElement('div');
     playerCard.className = 'player-card';
     playerCard.setAttribute('data-player-id', player.id);
     
     playerCard.innerHTML = `
       <div class="player-name">${player.name}</div>
-      <div class="player-details">${player.position || 'N/A'} - ${player.team || 'N/A'} - Rank: ${player.rank || 'N/A'}</div>
+      <div class="player-details">${player.position} - ${player.team} - Rank: ${player.rank}</div>
     `;
     
     // Add click handler to the new player card
@@ -118,7 +102,7 @@ function displayPlayers(players) {
       socket.emit('draft_player', {
         playerId: player.id,
         playerName: player.name,
-        playerDetails: `${player.position || 'N/A'} - ${player.team || 'N/A'} - Rank: ${player.rank || 'N/A'}`
+        playerDetails: `${player.position} - ${player.team} - Rank: ${player.rank}`
       });
       
       console.log(`Sent draft pick to server: ${player.name}`);
@@ -126,8 +110,6 @@ function displayPlayers(players) {
     
     playersListElement.appendChild(playerCard);
   });
-  
-  console.log(`✅ Successfully displayed ${players.length} players`);
 }
 
 // Function to add a player to a team's roster visually
